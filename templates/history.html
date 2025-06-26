@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        /* Ensure the canvas is responsive within its container */
+        .chart-container {
+            position: relative;
+            height: 400px; /* Fixed height, but width is fluid */
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <nav class="bg-white shadow-md p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-gray-800">NeuroCare</a>
+            <div class="space-x-4">
+                <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Home</a>
+                <a class="nav-link {% if request.endpoint == 'webcam_detection_page' %}active{% endif %}" href="{{ url_for('webcam_detection_page') }}">Webcam Scan</a>
+                <a class="nav-link {% if request.endpoint == 'survey_page' %}active{% endif %}" href="{{ url_for('survey_page') }}">Survey</a>
+                <a class="nav-link {% if request.endpoint == 'history' %}active{% endif %}" href="{{ url_for('history') }}">History</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-4xl mx-auto w-full text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Your Mood History</h1>
+            <p class="text-gray-600 mb-8">A visualization of your detected emotions over time.</p>
+
+            <div class="chart-container mb-8">
+                <canvas id="moodChart"></canvas>
+            </div>
+
+            <div class="text-left">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Raw Mood Data</h2>
+                {% if mood_data %}
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        {% for entry in mood_data %}
+                            <li>{{ entry.timestamp }} - Mood: <span class="font-semibold">{{ entry.mood }}</span>, Confidence: {{ entry.confidence }}%</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-600">No mood data recorded yet.</p>
+                {% endif %}
+            </div>
+
+            <a href="/" class="inline-block mt-8 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                Back to Home
+            </a>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8">
+        <div class="container mx-auto">
+            &copy; {{ current_year }} NeuroCare App. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const moodData = {{ mood_data | tojson }}; // Flask passes mood_data as a JSON string
+
+            if (moodData && moodData.length > 0) {
+                // Process data for the chart: count occurrences of each mood
+                const moodCounts = {};
+                moodData.forEach(entry => {
+                    const mood = entry.mood;
+                    moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+                });
+
+                const labels = Object.keys(moodCounts);
+                const data = Object.values(moodCounts);
+
+                // Define colors for each mood (optional, but good for consistency)
+                const moodColors = {
+                    'Happy': '#4CAF50', // Green
+                    'Neutral': '#9E9E9E', // Gray
+                    'Sad': '#2196F3',    // Blue
+                    'Angry': '#F44336',  // Red
+                    'Fear': '#FF9800',   // Orange
+                    'Surprise': '#9C27B0', // Purple
+                    'Disgust': '#795548', // Brown
+                    'Uncertain': '#FFEB3B' // Yellow
+                };
+
+                const backgroundColors = labels.map(mood => moodColors[mood] || '#CCCCCC'); // Default if mood not in map
+
+                const ctx = document.getElementById('moodChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar', // Can change to 'line', 'pie', etc.
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Times Detected',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderColor: backgroundColors.map(color => color.replace('0.2)', '1)')), // Darker border
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false // No need for legend if bars are uniquely colored and labeled
+                            },
+                            title: {
+                                display: true,
+                                text: 'Summary of Detected Moods',
+                                font: {
+                                    size: 18
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Count'
+                                },
+                                ticks: {
+                                    stepSize: 1 // Ensure whole numbers for counts
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Mood'
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                // If no data, display a message
+                const chartContainer = document.querySelector('.chart-container');
+                chartContainer.innerHTML = '<p class="text-gray-600">No mood data available to display a chart yet. Try detecting your mood via webcam or survey!</p>';
+                chartContainer.classList.add('flex', 'items-center', 'justify-center'); // Center message
+            }
+        });
+    </script>
+</body>
+</html>

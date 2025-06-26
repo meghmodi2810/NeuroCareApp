@@ -1,0 +1,33 @@
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef7fa 100%);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+
+.lead {
+  color: #555;
+  font-size: 1.25rem;
+}
+
+.btn-lg {
+  font-weight: 500;
+  border-radius: 12px;
+}

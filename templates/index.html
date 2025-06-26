@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroCare App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Welcome to NeuroCare</h1>
+        <p class="text-gray-600 mb-8">Choose how you'd like to detect your mood:</p>
+        <div class="space-y-4">
+            <a href="/webcam_detection" class="block w-full bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                Detect Mood using Webcam
+            </a>
+            <a href="/survey" class="block w-full bg-green-500 text-white py-3 px-6 rounded-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                Conduct a Mood Survey
+            </a>
+            <a href="/history" class="block w-full bg-purple-500 text-white py-3 px-6 rounded-md hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                View Mood History
+            </a>
+        </div>
+    </div>
+</body>
+</html>

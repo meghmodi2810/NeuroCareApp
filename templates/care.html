@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Live Scan - Mood Monitor
+{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/care.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Real-Time Emotion Detection</h1>
+        <p class="lead text-muted">Click the button below to start the live scan using your webcam.</p>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-body p-lg-5">
+            <div class="row align-items-center">
+                <!-- Video Feed Column -->
+                <div class="col-lg-7">
+                    <div class="video-container shadow rounded-3">
+                         <img id="video" style="display: none;" class="bg-dark">
+                         <div id="spinner" class="spinner-container d-none">
+                            <div class="spinner-border text-light" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-light mt-2">Starting camera...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Column -->
+                <div class="col-lg-5 mt-4 mt-lg-0">
+                    <div class="text-center">
+                        <button id="scanBtn" class="btn btn-success btn-lg shadow-sm mb-4">
+                            <i class="bi bi-camera-video me-2"></i> Start Live Scan
+                        </button>
+                    </div>
+
+                    <div id="results" class="results-card card border-0 bg-light p-4 rounded-3 d-none">
+                        <h4 class="text-center mb-3 fw-light text-muted">Current Mood</h4>
+                        <div class="mood-result text-center mb-3">
+                            <span id="mood" class="badge fs-4">Initializing...</span>
+                            <span id="confidence" class="text-muted ms-2"></span>
+                        </div>
+                        <hr>
+                        <h5 class="text-center mb-3 fw-light text-muted">Suggestion</h5>
+                        <p id="suggestion" class="text-center lead">...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/care.js') }}"></script>
+{% endblock %}

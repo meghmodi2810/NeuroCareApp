@@ -1,0 +1,15 @@
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef7fa 100%);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.chart-container {
+  position: relative;
+  margin: auto;
+}
