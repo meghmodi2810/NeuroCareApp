@@ -188,9 +188,18 @@ def submit_survey():
 @app.route('/history')
 def history():
     """Renders the mood history page with data for the chart."""
-    mood_data = read_mood_log()
-    return render_template("history.html", mood_data=mood_data)
-
+    try:
+        raw_data = read_mood_log()
+        # Convert to list of dicts for JSON serialization
+        mood_data = [{
+            'timestamp': entry.timestamp,
+            'mood': entry.mood,
+            'confidence': entry.confidence
+        } for entry in raw_data]
+        return render_template("history.html", mood_data=mood_data)
+    except Exception as e:
+        print(f"Error loading history: {e}")
+        return render_template("history.html", mood_data=[])
 
 # --- API and Streaming Endpoints ---
 
