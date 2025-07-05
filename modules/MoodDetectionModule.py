@@ -24,7 +24,7 @@ class MoodDetector:
         # This path assumes 'best_mobilenet_model.h5' is in a 'static' folder
         # that is a sibling to the 'modules' folder (i.e., NeuroCareApp/static/).
         # Adjust if your model file is named differently or in another location.
-        model_path = os.path.join(script_dir, 'static', 'fina;_mobilenet_model.h5')
+        model_path = os.path.join(script_dir, 'static', 'final_mobilenet_model.h5')
 
         # --- Camera Setup - Initialize to None, will be set in start_webcam_detection ---
         self.cap = None
